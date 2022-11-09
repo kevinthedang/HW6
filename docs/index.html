@@ -1,0 +1,185 @@
+<!-- 
+    Name: Kevin Dang
+    Class: CPSC 332
+    HW6 JQuery
+    Last Modified: 11-08-2022
+
+    Modified from: https://codepen.io/cathydutton/pen/GBcvo
+    -->
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+        <title>HW6 - JQuery</title>
+    
+        <script>
+            $(document).ready(() => {
+                var seconds = 00;
+                var tens = 00;
+                var $appendTens = $("#tens");
+                var $appendSeconds = $("#seconds");
+                var $buttonStart = $("#button-start");
+                var $buttonStop = $("#button-stop");
+                var $buttonReset = $("#button-reset");
+                var interval;
+                var animateOpacity;
+    
+                $buttonStart.addClass('buttonStyle');
+                $buttonStop.addClass('buttonStyle');
+                $buttonReset.addClass('buttonStyle');
+    
+                $('.buttonStyle').css({
+                    backgroundColor: 'black',
+                    color: 'white',
+                    fontSize: '18px',
+                    border: '3px ridge blue',
+                    borderRadius: '10px',
+                    width: '70px'
+                })
+    
+                // added selectors
+                var $timer = $("#timer");
+                var $wrapper = $('.wrapper');
+                $timer.addClass("timer-background");
+    
+                $wrapper.css({
+                    border: '5px ridge blue',
+                    borderRadius: '5px',
+                    backgroundColor: 'rgb(61, 61, 61)',
+                    padding: '40px',
+                    color: 'white',
+                    textShadow: '3px 3px 10px blue',
+                    fontStyle: 'italic',
+                })
+    
+                $("body").css({
+                    display: "flex",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    marginTop: '5%',
+                })
+    
+                // default state/ initial state
+                $(".timer-background").css({
+                    padding: "10px",
+                    margin: "auto",
+                    marginBottom: "20px",
+                    maxWidth: '225px',
+                    backgroundColor: 'grey',
+                    border: '2px solid blue',
+                    borderRadius: '20px',
+                    color: 'white'
+                })
+    
+                function animation() {
+                    $('.timer-background').animate({ opacity: '0.8' }, 'slow')
+                    $('.timer-background').animate({ opacity: '1' }, 'slow')
+                }
+    
+                function stopAnimation() {
+                    clearInterval(animateOpacity);
+                    $('.timer-background').stop(true, true).animate({ opacity: '0.8' });
+                    $('.timer-background').stop(true, true).animate({ opacity: '1' });
+                }
+    
+                $buttonStart.on("click", () => {
+                    backgroundCheck('start');
+                    clearInterval(interval);
+                    interval = setInterval(startTimer, 10);
+                    animateOpacity = setInterval(animation, 20);
+                });
+    
+                $buttonStop.on("click", () => {
+                    backgroundCheck('stop');
+                    clearInterval(interval);
+                    stopAnimation();
+                });
+    
+                $buttonReset.on("click", () => {
+                    backgroundCheck('reset');
+                    clearInterval(interval);
+                    stopAnimation();
+                    tens = "00";
+                    seconds = "00";
+                    $appendTens.html(tens);
+                    $appendSeconds.html(seconds);
+                });
+    
+                function backgroundCheck(condition) {
+                    if (condition === 'start') {
+                        $(".timer-background").css({
+                            padding: "10px",
+                            margin: "auto",
+                            marginBottom: "20px",
+                            maxWidth: '225px',
+                            backgroundColor: 'rgb(51, 165, 50)',
+                            border: '2px solid blue',
+                            borderRadius: '20px'
+                        })
+                    } else if (condition === 'stop' && ((seconds !== "00" || tens !== "00") && (seconds !== 00 || tens !== 00))) {
+                        $(".timer-background").css({
+                            padding: "10px",
+                            margin: "auto",
+                            marginBottom: "20px",
+                            maxWidth: '225px',
+                            backgroundColor: 'rgb(251, 18, 47)',
+                            border: '2px solid blue',
+                            borderRadius: '20px'
+                        })
+                        clearInterval(animateOpacity);
+                    } else if (condition === 'reset') {
+                        $(".timer-background").css({
+                            padding: "10px",
+                            margin: "auto",
+                            marginBottom: "20px",
+                            maxWidth: '225px',
+                            backgroundColor: 'grey',
+                            border: '2px solid blue',
+                            borderRadius: '20px'
+                        })
+                        clearInterval(animateOpacity);
+                    }
+                    
+                }
+    
+                function startTimer() {
+                    tens++;
+    
+                    if (tens < 9) {
+                        $appendTens.html(`0${tens}`)
+                    }
+    
+                    if (tens > 9) {
+                        $appendTens.html(tens);
+                    }
+    
+                    if (tens > 99) {
+                        console.log("seconds");
+                        seconds++;
+                        $appendSeconds.html(`0${seconds}`);
+                        tens = 0;
+                        $appendTens.html(`0${0}`)
+                    }
+    
+                    if (seconds > 9) {
+                        $appendSeconds.html(seconds);
+                    }
+                }
+            });
+        </script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h1>JQuery Stopwatch</h1>
+            <p id="timer"><span id="seconds">00</span>:<span id="tens">00</span></p>
+            <button id="button-start">Start</button>
+            <button id="button-stop">Stop</button>
+            <button id="button-reset">Reset</button>
+        </div>
+    </body>
+    
+    </html>
